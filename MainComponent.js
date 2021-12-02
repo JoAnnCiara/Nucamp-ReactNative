@@ -1,5 +1,11 @@
-import Constants from 'expo-constants';
 import React, { Component } from 'react';
+import About from './AboutComponent';
+import CampsiteInfo from './CampsiteInfoComponent';
+import Contact from './ContactComponent';
+import Directory from './DirectoryComponent';
+import Home from './HomeComponent';
+import Reservation from './ReservationComponent';
+import Favorites from './FavoritesComponent';
 import { Image, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Icon } from 'react-native-elements';
 import SafeAreaView from 'react-native-safe-area-view';
@@ -8,12 +14,7 @@ import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
 import { createStackNavigator } from 'react-navigation-stack';
 import { connect } from 'react-redux';
 import { fetchCampsites, fetchComments, fetchPartners, fetchPromotions } from '../redux/ActionCreators';
-import About from './AboutComponent';
-import CampsiteInfo from './CampsiteInfoComponent';
-import Contact from './ContactComponent';
-import Directory from './DirectoryComponent';
-import Home from './HomeComponent';
-import Reservation from './ReservationComponent';
+import Login from './LoginComponent';
 
 const mapDispatchToProps = {
     fetchCampsites,
@@ -142,11 +143,58 @@ const ReservationNavigator = createStackNavigator(
         })
     }
 );
+const FavoritesNavigator = createStackNavigator(
+    {
+        Favorites: { screen: Favorites }
+    },
+    {
+        defaultNavigationOptions: ({ navigation }) => ({
+            headerStyle: {
+                backgroundColor: '#5637DD'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                color: '#fff'
+            },
+            headerLeft: <Icon
+                name='heart'
+                type='font-awesome'
+                iconStyle={styles.stackIcon}
+                onPress={() => navigation.toggleDrawer()}
+            />
+        })
+    }
+);
+
+const LoginNavigator = createStackNavigator(
+    {
+        Login: { screen: Login }
+    },
+    {
+        defaultNavigationOptions: ({ navigation }) => ({
+            headerStyle: {
+                backgroundColor: '#5637DD'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                color: '#fff'
+            },
+            headerLeft: <Icon
+                name='sign-in'
+                type='font-awesome'
+                iconStyle={styles.stackIcon}
+                onPress={() => navigation.toggleDrawer()}
+            />
+        })
+    }
+);
+
 const CustomDrawerContentComponent = props => (
-    <ScrollView>
+    < ScrollView >
         <SafeAreaView
             style={styles.container}
             forceInset={{ top: 'always', horizontal: 'never' }}>
+
             <View style={styles.drawerHeader}>
                 <View style={{ flex: 1 }}>
                     <Image source={require('./images/logo.png')} style={styles.drawerImage} />
@@ -162,6 +210,19 @@ const CustomDrawerContentComponent = props => (
 
 const MainNavigator = createDrawerNavigator(
     {
+        Login: {
+            screen: LoginNavigator,
+            navigationOptions: {
+                drawerIcon: ({ tintColor }) => (
+                    <Icon
+                        name='sign-in'
+                        type='font-awesome'
+                        size={24}
+                        color={tintColor}
+                    />
+                )
+            }
+        },
         Home: {
             screen: HomeNavigator,
             navigationOptions: {
@@ -229,12 +290,29 @@ const MainNavigator = createDrawerNavigator(
                     />
                 )
             }
+        },
+        Favorites: {
+            screen: FavoritesNavigator,
+            navigationOptions: {
+                drawerLabel: 'My Favorites',
+                drawerIcon: ({ tintColor }) => (
+                    <Icon
+                        name='heart'
+                        type='font-awesome'
+                        size={24}
+                        color={tintColor}
+                    />
+                )
+            }
         }
     },
+
     {
+        initialRouteName:  'Home',
         drawerBackgroundColor: '#CEC8FF',
         contentComponent: CustomDrawerContentComponent
     }
+    
 );
 
 const AppNavigator = createAppContainer(MainNavigator)
