@@ -159,18 +159,20 @@ export const addComment = comment => ({
 });
 
 export const postComment = (campsiteId, rating, author, text) => dispatch => {
-    setTimeout(() => {
-        dispatch(addComment(newComment));
-    }, 2000);
-};
+    
+
     const newComment = {
         campsiteId,
         rating,
         author,
         text
     };
-    newComment.date = new Date().toISOString();
+newComment.date = new Date().toISOString();
 
+    setTimeout(() => {
+    dispatch(addComment(newComment));
+}, 2000);
+};
 
 
 export const deleteFavorite = campsiteId => ({
